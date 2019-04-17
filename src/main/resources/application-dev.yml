@@ -1,0 +1,62 @@
+server:
+  port: 8080
+  display-name: MapAbc
+  context-path: /utcsystem
+  tomcat:
+    max-threads: 1000
+
+#线程池配置
+threadPool:
+  corePoolSize: 5
+  maxPoolSize: 200
+  queueCapacity: 5
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'&useSSL=false&useCursorFetch=true
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 连接池配置:
+    filters: stat
+    minIdle: 50
+    maxActive: 200
+    initialSize: 10
+    # 等待获取连接的时间
+    maxWait: 5000
+    # 连接保持空闲而不被驱逐的最小时间
+    minEvictableIdleTimeMillis: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 30000
+    # 测试连接有效性
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    keepAlive: false
+    # 指定获取连接时连接校验的sql查询语句
+    validationQuery: SELECT 1
+    # 启用ps
+    poolPreparedStatements: false
+    maxPoolPreparedStatementPerConnectionSize: -1
+    maxOpenPreparedStatements: -1
+    # 记录被判定为异常的连接
+    logAbandoned: true
+  http:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    pool:
+      maxActive: 100
+      maxWait: -1
+      maxIdle: 10
+      minIdle: 10
+    timeout: 10000
