@@ -5,7 +5,7 @@ import com.mapabc.signal.common.annotation.AspectLog;
 import com.mapabc.signal.common.util.IpAddressUtil;
 import com.mapabc.signal.common.util.date.DateStyle;
 import com.mapabc.signal.common.util.date.DateUtils;
-import com.mapabc.signal.dao.model.OperateLog;
+import com.mapabc.signal.common.component.OperateLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

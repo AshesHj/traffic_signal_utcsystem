@@ -1,4 +1,4 @@
-package com.mapabc.signal.dao.model;
+package com.mapabc.signal.common.component;
 
 import lombok.Data;
 

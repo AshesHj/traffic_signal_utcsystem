@@ -5,7 +5,7 @@ import com.mapabc.signal.common.util.IpAddressUtil;
 import com.mapabc.signal.common.util.StringUtils;
 import com.mapabc.signal.common.util.date.DateStyle;
 import com.mapabc.signal.common.util.date.DateUtils;
-import com.mapabc.signal.dao.model.ExceptionLog;
+import com.mapabc.signal.common.component.ExceptionLog;
 import com.mapabc.signal.service.ExceptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
