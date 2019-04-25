@@ -1,5 +1,6 @@
 package com.mapabc.signal.service.impl;
 
+import com.mapabc.signal.common.enums.BaseEnum;
 import com.mapabc.signal.common.exception.WarnException;
 import com.mapabc.signal.common.util.IpAddressUtil;
 import com.mapabc.signal.common.util.StringUtils;

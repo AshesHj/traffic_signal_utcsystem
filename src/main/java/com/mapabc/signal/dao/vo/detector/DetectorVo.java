@@ -1,4 +1,4 @@
-package com.mapabc.signal.dao.model.detector;
+package com.mapabc.signal.dao.vo.detector;
 
 import com.mapabc.signal.common.component.BaseSignal;
 import lombok.Data;

@@ -6,7 +6,7 @@ service:
   name: traffic-signal-utcsystem
 
 mybatis:
-  type-aliases-package: com.mapabc.signal.*.model
+  type-aliases-package: com.mapabc.*.model
   mapper-locations: classpath:mapper/*.xml
 
 mapper:

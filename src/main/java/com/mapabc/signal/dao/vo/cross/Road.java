@@ -1,4 +1,4 @@
-package com.mapabc.signal.dao.model.cross;
+package com.mapabc.signal.dao.vo.cross;
 
 import lombok.Data;
 

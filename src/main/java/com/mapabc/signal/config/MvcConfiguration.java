@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author yinguijin
  * @version 1.0
- * @Description: [描述该类概要功能介绍]
+ * @Description: [MVC 配置]
  * Created on 2019/4/17 15:07
  */
 @Configuration

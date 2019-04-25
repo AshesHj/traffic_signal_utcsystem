@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TBaseVendorMethodMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TBaseVendorMethod">
+        <id column="ID" property="ID"/>
+        <result column="VENDOR_CODE" property="vendorCode"/>
+        <result column="VENDOR_NAME" property="vendorName"/>
+        <result column="VENDOR_NICK" property="vendorNick"/>
+        <result column="METHOD_TYPE" property="methodType"/>
+        <result column="HTTP_METHOD" property="httpMethod"/>
+        <result column="METHOD_CODE" property="methodCode"/>
+        <result column="METHOD_NAME" property="methodName"/>
+        <result column="METHOD_DESC" property="methodDesc"/>
+        <result column="METHOD_URL" property="methodUrl"/>
+        <result column="IS_DELETE" property="isDelete"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        ID,
+        VENDOR_CODE,
+        VENDOR_NAME,
+        VENDOR_NICK,
+        METHOD_TYPE,
+        HTTP_METHOD,
+        METHOD_CODE,
+        METHOD_NAME,
+        METHOD_DESC,
+        METHOD_URL,
+        IS_DELETE,
+        CREATE_TIME,
+        UPDATE_TIME
+    </sql>
+
+</mapper>

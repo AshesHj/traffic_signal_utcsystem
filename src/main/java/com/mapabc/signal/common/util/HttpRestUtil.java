@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.mapabc.signal.common.component.VendorResult;
-import com.mapabc.signal.dao.model.cross.Crossing;
+import com.mapabc.signal.dao.vo.cross.CrossingVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -40,11 +40,11 @@ public class HttpRestUtil {
      * @author yinguijin
      * @date 2019/4/19 11:47
      */
-    public static <T> VendorResult<T> doGet(String url, JSONObject param) {
+    private static <T> VendorResult<T> doGet(String url, JSONObject param) {
         long startTime = System.currentTimeMillis();
         LOGGER.info("\n 请求地址 = {} || 请求参数 = {}",
                 url, JSON.toJSONString(param));
-        ResponseEntity<String> responseEntity = get().getForEntity(url, String.class, param);
+        ResponseEntity<String> responseEntity = get().getForEntity(url, String.class, JSON.toJSONString(param));
         if (null != responseEntity && HttpStatus.OK.equals(responseEntity.getStatusCode()) && responseEntity.hasBody()) {
             String result = responseEntity.getBody();
             if (StringUtils.isEmpty(result)) {
@@ -64,6 +64,26 @@ public class HttpRestUtil {
         }
     }
 
+    /**
+     * @description: 发送GET请求
+     * @param url 请求URL
+     * @param headers 请求头
+     * @param param 请求参数
+     * @return com.mapabc.signal.common.component.VendorResult<T> 返回结果
+     * @author yinguijin
+     * @date 2019/4/19 11:47
+     */
+    public static <T> VendorResult<T> doGet(String url, Map<String, String> headers, String param) {
+        String result = doExecute(url, headers, HttpMethod.GET, param);
+        if (StringUtils.isEmpty(result)) {
+            return null;
+        }
+        // 转化结果
+        VendorResult<T> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<T>>() {
+        });
+        return tVendorResult;
+    }
+
 
     /**
      * @description: 发送POST请求
@@ -73,7 +93,7 @@ public class HttpRestUtil {
      * @author yinguijin
      * @date 2019/4/19 11:47
      */
-    public static <T> VendorResult<T> doPost(String url, JSONObject param) {
+    private static <T> VendorResult<T> doPost(String url, JSONObject param) {
         long startTime = System.currentTimeMillis();
         LOGGER.info("\n 请求地址 = {} || 请求参数 = {}",
                 url, JSON.toJSONString(param));
@@ -98,33 +118,56 @@ public class HttpRestUtil {
     }
 
     /**
+     * @description: 发送POST请求
+     * @param url 请求URL
+     * @param headers 请求头
+     * @param param 请求参数
+     * @return com.mapabc.signal.common.component.VendorResult<T> 返回结果
+     * @author yinguijin
+     * @date 2019/4/19 11:47
+     */
+    public static <T> VendorResult<T> doPost(String url, Map<String, String> headers, String param) {
+        String result = doExecute(url, headers, HttpMethod.POST, param);
+        if (StringUtils.isEmpty(result)) {
+            return null;
+        }
+        // 转化结果
+        VendorResult<T> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<T>>() {
+        });
+        return tVendorResult;
+    }
+
+    /**
      * @description: 发送请求
      * @param url 请求地址
      * @param headers 请求头
      * @param method 请求类型 POST、GET
      * @param param 参数
-     * @return com.mapabc.signal.common.component.VendorResult<T> 返回结果
+     * @return String 返回结果
      * @author yinguijin
      * @date 2019/4/19 12:39
      */
-    public static <T> VendorResult<T> doExecute(String url, Map<String, String> headers, HttpMethod method, JSONObject param) {
+    public static String doExecute(String url, Map<String, String> headers, HttpMethod method, String param) {
         long startTime = System.currentTimeMillis();
         LOGGER.info("\n 请求地址 = {} || 请求方式 = {} || 请求头 = {} || 请求参数 = {}",
                 url, method.name(), JSON.toJSONString(headers), JSON.toJSONString(param));
         //封装httpEntity
-        HttpEntity httpEntity = getHttpEntity(headers);
+        HttpEntity httpEntity = getHttpEntity(headers, param);
         //发送请求
-        ResponseEntity<String> responseEntity = get().exchange(url, method, httpEntity, String.class, param);
-        if (null != responseEntity && HttpStatus.OK.equals(responseEntity.getStatusCode()) && responseEntity.hasBody()) {
+        ResponseEntity<String> responseEntity = get().exchange(url, method, httpEntity, String.class);
+        //响应状态值 200 201 202
+        boolean statusBool = false;
+        if (HttpStatus.OK.equals(responseEntity.getStatusCode()) || HttpStatus.CREATED.equals(responseEntity.getStatusCode()) || HttpStatus.ACCEPTED.equals(responseEntity.getStatusCode())) {
+            statusBool = true;
+        }
+        if (null != responseEntity && statusBool && responseEntity.hasBody()) {
             String result = responseEntity.getBody();
+            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
+                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime, result);
             if (StringUtils.isEmpty(result)) {
                 return null;
             }
-            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
-                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
-            VendorResult<T> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<T>>() {
-            });
-            return  tVendorResult;
+            return result;
         } else {
             LOGGER.error("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
                     url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
@@ -135,7 +178,7 @@ public class HttpRestUtil {
     }
 
 
-    private static HttpEntity getHttpEntity(Map<String, String> headers) {
+    private static HttpEntity getHttpEntity(Map<String, String> headers, String param) {
         HttpHeaders httpHeaders = new HttpHeaders();
         Iterator iterator = headers.entrySet().iterator();
         while(iterator.hasNext()) {
@@ -145,14 +188,14 @@ public class HttpRestUtil {
                 httpHeaders.add(key, (String)entry.getValue());
             }
         }
-        return new HttpEntity(httpHeaders);
+        return new HttpEntity(param, httpHeaders);
     }
 
     public static void main(String[] args) {
 //        String result = "{\"systemtype\":\"UTC\",\"sourcetype\":1,\"datacount\":0,\"updatetime\":\"2019-04-19 12:50:12\",\"datacontent\":[{\"signalid\":\"10001\",\"signaltype\":\"1\",\"crossname\":\"1\",\"crosstype\":\"\",\"longitude\":113.456,\"latitude\":39.345,\"directions\":[{\"detector\":\"正前方\",\"roads\":[{\"roadid\":\"1\",\"roadname\":\"黄埔大道\"}]}]}]}";
-        String result = "{\"dataCount\":0,\"systemType\":\"UTC\",\"sourceType\":1,\"dataContent\":[{\"crossType\":\"\",\"directions\":[{\"roads\":[{\"roadId\":\"1\",\"roadName\":\"黄埔大道\"}],\"detector\":\"正前方\"}],\"signalType\":\"1\",\"signalId\":\"10001\",\"latitude\":39.345,\"crossName\":\"1\",\"longitude\":113.456}],\"updateTime\":\"2019-04-19 12:50:12\"}";
+        String result = "{\"datacount\":0,\"systemtype\":\"UTC\",\"sourcetype\":1,\"datacontent\":[{\"crosstype\":\"\",\"directions\":[{\"roads\":[{\"roadid\":\"1\",\"roadname\":\"黄埔大道\"}],\"detector\":\"正前方\"}],\"signaltype\":\"1\",\"signalid\":\"10001\",\"latitude\":39.345,\"crossname\":\"1\",\"longitude\":113.456}],\"updatetime\":\"2019-04-19 12:50:12\"}";
         System.out.println(JSONObject.parseObject(result));
-        VendorResult<Crossing> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<Crossing>>() {
+        VendorResult<CrossingVo> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<CrossingVo>>() {
         });
 
         System.out.println(JSON.toJSON(tVendorResult));

@@ -1,9 +1,8 @@
 package com.mapabc.signal.common.constant;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import com.mapabc.signal.dao.model.TBaseVendorMethod;
+
+import java.util.concurrent.*;
 
 /**
  * @Description: [常量类]
@@ -12,6 +11,16 @@ import java.util.concurrent.TimeUnit;
  * Created on 2019/4/16 15:07
  */
 public interface Const {
+
+    String SYSTEM_TYPE = "UTC";
+    /**
+     * 未删除
+     */
+    Boolean IS_DELETE_NO = false;
+    /**
+     * 已删除
+     */
+    Boolean IS_DELETE_YES = true;
 
     /**
      * 分隔符：逗号
@@ -69,4 +78,9 @@ public interface Const {
     ExecutorService masterDataPool =  new ThreadPoolExecutor(10, 100,
             5L, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>());
+
+    /**
+     * 厂商接口地址Map
+     */
+    ConcurrentHashMap<String, TBaseVendorMethod> urlMap = new ConcurrentHashMap<>();
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="Mysql" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- xml配置文件中分隔符 -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 配置通用的Mapper基类 -->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.xiaojukeji.ep.ip.dao.util.MyBaseMapper"/>
+        </plugin>
+
+        <jdbcConnection connectionURL="jdbc:mysql://172.20.24.58/didi-assets"
+                        driverClass="com.mysql.jdbc.Driver"
+                        userId="root"
+                        password="Eifqr!Kge">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}"/>
+
+        <sqlMapGenerator targetPackage="${targetXMLPackage}"  targetProject="${targetResourcesProject}"/>
+
+        <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="MIXEDMAPPER" />
+
+        <!-- 控制生成文件和XML的内容 -->
+        <table tableName="outsource_user" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>
+    </context>
+</generatorConfiguration>

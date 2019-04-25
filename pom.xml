@@ -30,6 +30,11 @@
         <io.version>2.4</io.version>
         <fastjson.version>1.2.47</fastjson.version>
         <pagehelper.version>1.1.1</pagehelper.version>
+        <!-- 代码生成器 -->
+        <mysql.connector.version>5.1.41</mysql.connector.version>
+        <mapper.version>3.4.0</mapper.version>
+        <mybatis.generator.version>1.3.2</mybatis.generator.version>
+        <camelot-generator.version>1.0-RELEASE</camelot-generator.version>
     </properties>
 
     <!-- Inherit defaults from Spring Boot -->
@@ -108,6 +113,21 @@
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>${mapper.springboot.version}</version>
         </dependency>
+
+        <!-- 代码生成器 -->
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.3.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.camelot.core</groupId>
+            <artifactId>camelot-generator</artifactId>
+            <version>${camelot-generator.version}</version>
+        </dependency>
+        <!-- 代码生成器 end-->
 
         <!-- pagehelper -->
         <dependency>
@@ -221,6 +241,30 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>${mybatis.generator.version}</version>
+                <configuration>
+                    <configurationFile>${basedir}/src/main/resources/mybatis-generator/generatorConfig.xml</configurationFile>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+                <dependencies>
+                    <!-- 数据库驱动 -->
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.connector.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>tk.mybatis</groupId>
+                        <artifactId>mapper</artifactId>
+                        <version>${mapper.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

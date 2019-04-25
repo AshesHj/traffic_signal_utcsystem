@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * @author yinguijin
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.mapabc"})
 @ServletComponentScan(basePackages = {"com.mapabc"})
+@MapperScan(basePackages = "com.mapabc.signal.dao.mapper")
 @EnableAsync
 public class Application {
 

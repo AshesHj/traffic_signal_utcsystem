@@ -1,4 +1,4 @@
-package com.mapabc.signal.dao.model.cross;
+package com.mapabc.signal.dao.vo.cross;
 
 import com.mapabc.signal.common.component.BaseSignal;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
  * Created on 2019/4/18 18:59
  */
 @Data
-public class Crossing extends BaseSignal {
+public class CrossingVo extends BaseSignal {
 
     //路口名称
     private String crossName;
