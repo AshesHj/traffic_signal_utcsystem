@@ -51,8 +51,9 @@ public class HttpRestEntity {
         url = method.getMethodUrl();
         httpMethod = HttpMethod.valueOf(method.getHttpMethod());
         // TODO 不同的厂商可以定义不同的请求头
-        headers = handlerHeader();
         if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick())) {
+            headers = handlerHeader();
+        } else {
             headers = handlerHeader();
         }
     }

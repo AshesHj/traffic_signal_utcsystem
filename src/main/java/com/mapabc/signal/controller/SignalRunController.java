@@ -47,8 +47,8 @@ public class SignalRunController extends BaseController {
     @ApiOperation(value = "信号运行状态数据", notes = "获取路口信号机的实时运行状态数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryRunstate (HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -75,8 +75,8 @@ public class SignalRunController extends BaseController {
     @ApiOperation(value = "信号机告警数据", notes = "获取路口信号机的实时灯态数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryAlarms (HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -103,8 +103,8 @@ public class SignalRunController extends BaseController {
     @ApiOperation(value = "信号灯态数据", notes = "获取路口信号机的实时灯态数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity querySignalInfo (HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -131,8 +131,8 @@ public class SignalRunController extends BaseController {
     @ApiOperation(value = "信号流量数据", notes = "获取路口信号机的实时流量数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity querySignalVolume (HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {

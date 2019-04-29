@@ -1,5 +1,6 @@
 package com.mapabc.signal.dao.vo.phase;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * Created on 2019/4/19 17:20
  */
 @Data
+@ApiModel(value = "Vdirection", description = "机动车方向")
 public class Vdirection {
 
     //方向, 方向：0 北 1 东北 2 东 3 东南 4 南 5 西南 6 西 7 西北

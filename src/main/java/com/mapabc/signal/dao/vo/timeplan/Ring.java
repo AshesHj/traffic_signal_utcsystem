@@ -1,6 +1,7 @@
 package com.mapabc.signal.dao.vo.timeplan;
 
 import com.mapabc.signal.dao.vo.phase.Phase;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.List;

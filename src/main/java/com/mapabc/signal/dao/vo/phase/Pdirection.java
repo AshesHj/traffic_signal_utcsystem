@@ -1,5 +1,6 @@
 package com.mapabc.signal.dao.vo.phase;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * Created on 2019/4/19 17:20
  */
 @Data
+@ApiModel(value = "Pdirection", description = "行人方向")
 public class Pdirection {
 
     //方向

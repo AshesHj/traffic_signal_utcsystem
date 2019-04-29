@@ -35,7 +35,8 @@ public class VendorResult<T> {
     private Date updateTime;
 
     /**
-     * 返回值
+     * 返回值集合
      */
     private List<T> dataContent;
+
 }

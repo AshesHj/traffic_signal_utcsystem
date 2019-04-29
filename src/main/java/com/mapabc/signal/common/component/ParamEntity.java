@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author yinguijin
  * @version 1.0
- * @Description: [描述该类概要功能介绍]
+ * @Description: [请求接受参数]
  * Created on 2019/4/24 21:35
  */
 @Data

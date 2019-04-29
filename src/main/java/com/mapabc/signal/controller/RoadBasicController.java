@@ -71,8 +71,8 @@ public class RoadBasicController extends BaseController {
     @ApiOperation(value = "获取路口的线圈信息", notes = "获取路口的线圈信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryDetectors(HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -99,8 +99,8 @@ public class RoadBasicController extends BaseController {
     @ApiOperation(value = "获取路口的相位方案信息", notes = "获取路口的相位方案信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryPhaseplan(HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -127,8 +127,8 @@ public class RoadBasicController extends BaseController {
     @ApiOperation(value = "获取路口的配时方案信息", notes = "获取路口的配时方案信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryTimePlan(HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -155,8 +155,8 @@ public class RoadBasicController extends BaseController {
     @ApiOperation(value = "获取路口的时段方案（日时段方案）", notes = "获取路口的时段方案（日时段方案）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity querySectionPlan(HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {
@@ -183,8 +183,8 @@ public class RoadBasicController extends BaseController {
     @ApiOperation(value = "获取路口的运行计划表", notes = "获取路口的运行计划表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS"),
-            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String", defaultValue = ""),
-            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "")
+            @ApiImplicitParam(name = "signalId", value = "信号机编号", paramType = "query", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "signalType", value = "信号机类型 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String")
     })
     public ResponseEntity queryRunplan(HttpServletRequest request, @RequestParam String sourceType, @ApiIgnore BaseSignal signal) {
         try {

@@ -11,15 +11,6 @@ import lombok.Getter;
  */
 public class BaseEnum {
 
-    @Getter
-    @AllArgsConstructor
-    public enum CommonEnum {
-        DELETE_NO(0, "未删除"),
-        DELETE_YES(1, "已删除");
-        private Integer value;
-        private String name;
-    }
-
     /**
      * @description: [操作日志类型枚举]
      * @author yinguijin

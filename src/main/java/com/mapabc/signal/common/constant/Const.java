@@ -23,6 +23,15 @@ public interface Const {
     Boolean IS_DELETE_YES = true;
 
     /**
+     * 失败-false
+     */
+    int FALSE = 0;
+    /**
+     * 成功-true
+     */
+    int TRUE = 1;
+
+    /**
      * 分隔符：逗号
      **/
     String SEPARATOR_COMMA = ",";

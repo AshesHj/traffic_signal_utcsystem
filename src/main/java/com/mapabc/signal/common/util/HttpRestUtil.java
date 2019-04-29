@@ -33,39 +33,87 @@ public class HttpRestUtil {
     }
 
     /**
-     * @description: 发送GET请求
+     * @description: 发送GET请求，支持转换类型，应用多变性返回值，classType返回值类型
      * @param url 请求URL
      * @param param 请求参数
-     * @return com.mapabc.signal.common.component.VendorResult<T> 返回结果
+     * @param classType 转换对象
+     * @return T 返回结果
      * @author yinguijin
      * @date 2019/4/19 11:47
      */
-    private static <T> VendorResult<T> doGet(String url, JSONObject param) {
+    public static <T> T doGet(String url, Map<String, String> headers, String param, Class<T> classType) {
         long startTime = System.currentTimeMillis();
-        LOGGER.info("\n 请求地址 = {} || 请求参数 = {}",
-                url, JSON.toJSONString(param));
-        ResponseEntity<String> responseEntity = get().getForEntity(url, String.class, JSON.toJSONString(param));
-        if (null != responseEntity && HttpStatus.OK.equals(responseEntity.getStatusCode()) && responseEntity.hasBody()) {
-            String result = responseEntity.getBody();
+        LOGGER.info("\n 请求地址 = {} || 请求方式 = {} || 请求头 = {} || 请求参数 = {}",
+                url, "GET", JSON.toJSONString(headers), JSON.toJSONString(param));
+        //封装httpEntity
+        HttpEntity httpEntity = getHttpEntity(headers, param);
+        //发送请求
+        ResponseEntity<T> responseEntity = get().exchange(url, HttpMethod.GET, httpEntity, classType);
+        //响应状态值 200 201 202
+        boolean statusBool = false;
+        if (HttpStatus.OK.equals(responseEntity.getStatusCode()) || HttpStatus.CREATED.equals(responseEntity.getStatusCode()) || HttpStatus.ACCEPTED.equals(responseEntity.getStatusCode())) {
+            statusBool = true;
+        }
+        if (null != responseEntity && statusBool && responseEntity.hasBody()) {
+            T result = responseEntity.getBody();
+            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
+                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime, JSON.toJSONString(result));
             if (StringUtils.isEmpty(result)) {
                 return null;
             }
-            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
-                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
-            VendorResult<T> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<T>>() {
-            });
-            return  tVendorResult;
+            return result;
         } else {
             LOGGER.error("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
-                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
+                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,JSON.toJSONString(responseEntity.getBody()));
             throw new RuntimeException("调用接口 = " + url + " || " +
                     "失败状态 = " + responseEntity.getStatusCode() + " || " +
-                    "响应 = " + responseEntity.getBody());
+                    "响应 = " + JSON.toJSONString(responseEntity.getBody()));
         }
     }
 
+
     /**
-     * @description: 发送GET请求
+     * @description: 发送POST请求，支持转换类型，应用多变性返回值，classType返回值类型
+     * @param url 请求URL
+     * @param headers 请求头
+     * @param param 请求参数
+     * @param classType 转换类型
+     * @return T 返回结果
+     * @author yinguijin
+     * @date 2019/4/28 14:54
+     */
+    public static <T> T doPost(String url, Map<String, String> headers, String param, Class<T> classType) {
+        long startTime = System.currentTimeMillis();
+        LOGGER.info("\n 请求地址 = {} || 请求方式 = {} || 请求头 = {} || 请求参数 = {}",
+                url, "POST", JSON.toJSONString(headers), JSON.toJSONString(param));
+        //封装httpEntity
+        HttpEntity httpEntity = getHttpEntity(headers, param);
+        ResponseEntity<T> responseEntity = get().postForEntity(url, httpEntity, classType);
+        //响应状态值 200 201 202
+        boolean statusBool = false;
+        if (HttpStatus.OK.equals(responseEntity.getStatusCode()) || HttpStatus.CREATED.equals(responseEntity.getStatusCode()) || HttpStatus.ACCEPTED.equals(responseEntity.getStatusCode())) {
+            statusBool = true;
+        }
+        if (null != responseEntity && statusBool && responseEntity.hasBody()) {
+            T result = responseEntity.getBody();
+            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
+                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,JSON.toJSONString(responseEntity.getBody()));
+            if (StringUtils.isEmpty(result)) {
+                return null;
+            }
+            return result;
+        } else {
+            LOGGER.error("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
+                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,JSON.toJSONString(responseEntity.getBody()));
+            throw new RuntimeException("调用接口 = " + url + " || " +
+                    "失败状态 = " + responseEntity.getStatusCode() + " || " +
+                    "响应 = " + JSON.toJSONString(responseEntity.getBody()));
+        }
+    }
+
+
+    /**
+     * @description: 发送GET请求，返回固定的返回类型VendorResult
      * @param url 请求URL
      * @param headers 请求头
      * @param param 请求参数
@@ -84,41 +132,8 @@ public class HttpRestUtil {
         return tVendorResult;
     }
 
-
     /**
-     * @description: 发送POST请求
-     * @param url 请求URL
-     * @param param 请求参数
-     * @return com.mapabc.signal.common.component.VendorResult<T> 返回结果
-     * @author yinguijin
-     * @date 2019/4/19 11:47
-     */
-    private static <T> VendorResult<T> doPost(String url, JSONObject param) {
-        long startTime = System.currentTimeMillis();
-        LOGGER.info("\n 请求地址 = {} || 请求参数 = {}",
-                url, JSON.toJSONString(param));
-        ResponseEntity<String> responseEntity = get().postForEntity(url, param, String.class);
-        if (null != responseEntity && HttpStatus.OK.equals(responseEntity.getStatusCode()) && responseEntity.hasBody()) {
-            String result = responseEntity.getBody();
-            if (StringUtils.isEmpty(result)) {
-                return null;
-            }
-            LOGGER.info("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
-                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
-            VendorResult<T> tVendorResult = JSON.parseObject(result, new TypeReference<VendorResult<T>>() {
-            });
-            return  tVendorResult;
-        } else {
-            LOGGER.error("请求地址 = {} || 请求参数 = {} || 响应时长 = {} || 响应结果 = {}",
-                    url, JSON.toJSONString(param), System.currentTimeMillis() - startTime ,responseEntity.getBody());
-            throw new RuntimeException("调用接口 = " + url + " || " +
-                    "失败状态 = " + responseEntity.getStatusCode() + " || " +
-                    "响应 = " + responseEntity.getBody());
-        }
-    }
-
-    /**
-     * @description: 发送POST请求
+     * @description: 发送POST请求，返回固定的返回类型VendorResult
      * @param url 请求URL
      * @param headers 请求头
      * @param param 请求参数
@@ -138,7 +153,7 @@ public class HttpRestUtil {
     }
 
     /**
-     * @description: 发送请求
+     * @description: 发送请求，返回string字符串，需要自己转换，应用返回结果简单的请求
      * @param url 请求地址
      * @param headers 请求头
      * @param method 请求类型 POST、GET
@@ -176,7 +191,6 @@ public class HttpRestUtil {
                     "响应 = " + responseEntity.getBody());
         }
     }
-
 
     private static HttpEntity getHttpEntity(Map<String, String> headers, String param) {
         HttpHeaders httpHeaders = new HttpHeaders();

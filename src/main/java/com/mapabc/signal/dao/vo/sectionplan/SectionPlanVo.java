@@ -1,6 +1,7 @@
 package com.mapabc.signal.dao.vo.sectionplan;
 
 import com.mapabc.signal.common.component.BaseSignal;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.List;

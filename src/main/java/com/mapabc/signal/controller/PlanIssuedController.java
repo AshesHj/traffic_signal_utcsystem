@@ -1,8 +1,16 @@
 package com.mapabc.signal.controller;
 
 import com.mapabc.signal.common.annotation.AspectLog;
+import com.mapabc.signal.common.component.ParamEntity;
+import com.mapabc.signal.common.component.Result;
+import com.mapabc.signal.common.constant.Const;
 import com.mapabc.signal.common.enums.BaseEnum;
 import com.mapabc.signal.common.exception.WarnException;
+import com.mapabc.signal.dao.vo.phase.PhasePlanVo;
+import com.mapabc.signal.dao.vo.runplan.RunplanVo;
+import com.mapabc.signal.dao.vo.sectionplan.SectionPlanVo;
+import com.mapabc.signal.dao.vo.timeplan.TimePlanVo;
+import com.mapabc.signal.service.PlanIssuedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,34 +19,147 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @author yinguijin
  * @version 1.0
- * @Description: [控制指令-方案下发接口]
+ * @Description: [控制指令-相位/配时/时段/运行方案下发API接口]
  * Created on 2019/4/25 17:07
  */
-@Api(value = "方案下发API接口", description = "方案下发API接口", tags = {"控制指令接口"})
+@Api(value = "相位/配时/时段/运行方案下发API接口", description = "相位/配时/时段/运行方案下发API接口", tags = {"控制指令接口"})
 @RestController
 @RequestMapping("/")
 public class PlanIssuedController extends BaseController {
 
+    @Resource
+    private PlanIssuedService planIssuedService;
 
-    @AspectLog(description = "设置当前路口信号机的方案优化", operationType = BaseEnum.OperationTypeEnum.UPDATE)
-    @PostMapping("/{signalid}/timeplan")
-    @ApiOperation(value = "当前方案优化调整", notes = "设置当前路口信号机的方案优化")
+    @AspectLog(description = "下发相位方案信息到路口信号机或信号系统中", operationType = BaseEnum.OperationTypeEnum.UPDATE)
+    @PostMapping("/{signalId}/phaseplans")
+    @ApiOperation(value = "相位方案下发", notes = "下发相位方案信息到路口信号机或信号系统中")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS")
     })
-    public ResponseEntity timeplan(HttpServletRequest request, @RequestParam String sourceType, @PathVariable String signalid) {
+    public ResponseEntity updatePhasePlans(HttpServletRequest request,
+                                           @PathVariable String signalId,
+                                           @RequestParam String sourceType, @RequestBody PhasePlanVo phasePlanVo) {
         try {
-            return ResponseEntity.ok("sucess");
+            //设置参数
+            ParamEntity<PhasePlanVo> param = new ParamEntity<>();
+            param.setSourceType(sourceType);
+            param.setUpdateTime(new Date());
+            param.setSystemType(Const.SYSTEM_TYPE);
+            phasePlanVo.setSignalId(signalId);
+            param.setDataContent(phasePlanVo);
+            Result result = planIssuedService.updatePhasePlans(param);
+            if (result.isSuccess()) {
+                return ResponseEntity.ok("success");
+            }
+            return ResponseEntity.status(result.getStatus()).body(result.getMsg());
         } catch (WarnException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            exceptionService.handle("设置当前路口信号机的方案优化异常", e, request);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("设置当前路口信号机的方案优化异常");
+            exceptionService.handle("相位方案下发-->下发相位方案信息到路口信号机或信号系统异常", e, request);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("下发相位方案信息到路口信号机或信号系统异常");
+        }
+    }
+
+    @AspectLog(description = "下发配时方案信息到路口信号机或信号系统", operationType = BaseEnum.OperationTypeEnum.UPDATE)
+    @PostMapping("/{signalId}/timeplans")
+    @ApiOperation(value = "配时方案下发", notes = "下发配时方案信息到路口信号机或信号系统")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS")
+    })
+    public ResponseEntity updateTimePlans(HttpServletRequest request,
+                                           @PathVariable String signalId,
+                                           @RequestParam String sourceType, @RequestBody TimePlanVo timePlanVo) {
+        try {
+            //设置参数
+            ParamEntity<TimePlanVo> param = new ParamEntity<>();
+            param.setSourceType(sourceType);
+            param.setUpdateTime(new Date());
+            param.setSystemType(Const.SYSTEM_TYPE);
+            timePlanVo.setSignalId(signalId);
+            param.setDataContent(timePlanVo);
+            //发送请求
+            Result result = planIssuedService.updateTimePlans(param);
+            if (result.isSuccess()) {
+                return ResponseEntity.ok("success");
+            }
+            return ResponseEntity.status(result.getStatus()).body(result.getMsg());
+        } catch (WarnException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            exceptionService.handle("下发配时方案信息到路口信号机或信号系统中异常", e, request);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("下发配时方案信息到路口信号机或信号系统中异常");
+        }
+    }
+
+
+    @AspectLog(description = "下发时段方案信息到路口信号机或信号系统中", operationType = BaseEnum.OperationTypeEnum.UPDATE)
+    @PostMapping("/{signalId}/sectionplans")
+    @ApiOperation(value = "配时方案下发", notes = "下发时段方案信息到路口信号机或信号系统中")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS")
+    })
+    public ResponseEntity updateSectionPlans(HttpServletRequest request,
+                                          @PathVariable String signalId,
+                                          @RequestParam String sourceType, @RequestBody SectionPlanVo sectionPlanVo) {
+        try {
+            //设置参数
+            ParamEntity<SectionPlanVo> param = new ParamEntity<>();
+            param.setSourceType(sourceType);
+            param.setUpdateTime(new Date());
+            param.setSystemType(Const.SYSTEM_TYPE);
+            sectionPlanVo.setSignalId(signalId);
+            param.setDataContent(sectionPlanVo);
+            //发送请求
+            Result result = planIssuedService.updateSectionPlans(param);
+            if (result.isSuccess()) {
+                return ResponseEntity.ok("success");
+            }
+            return ResponseEntity.status(result.getStatus()).body(result.getMsg());
+        } catch (WarnException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            exceptionService.handle("下发配时方案信息到路口信号机或信号系统中异常", e, request);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("下发配时方案信息到路口信号机或信号系统中异常");
+        }
+    }
+
+
+    @AspectLog(description = "下发运行计划信息到路口信号机或信号系统中", operationType = BaseEnum.OperationTypeEnum.UPDATE)
+    @PostMapping("/{signalId}/runplan")
+    @ApiOperation(value = "运行计划下发", notes = "下发运行计划信息到路口信号机或信号系统中")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS")
+    })
+    public ResponseEntity updateRunPlan(HttpServletRequest request,
+                                             @PathVariable String signalId,
+                                             @RequestParam String sourceType, @RequestBody RunplanVo runplanVo) {
+        try {
+            //设置参数
+            ParamEntity<RunplanVo> param = new ParamEntity<>();
+            param.setSourceType(sourceType);
+            param.setUpdateTime(new Date());
+            param.setSystemType(Const.SYSTEM_TYPE);
+            runplanVo.setSignalId(signalId);
+            param.setDataContent(runplanVo);
+            //发送请求
+            Result result = planIssuedService.updateRunPlan(param);
+            if (result.isSuccess()) {
+                return ResponseEntity.ok("success");
+            }
+            return ResponseEntity.status(result.getStatus()).body(result.getMsg());
+        } catch (WarnException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            exceptionService.handle("下发运行计划信息到路口信号机或信号系统中异常", e, request);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("下发运行计划信息到路口信号机或信号系统中异常");
         }
     }
 }
+

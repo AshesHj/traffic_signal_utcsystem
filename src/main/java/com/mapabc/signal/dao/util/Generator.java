@@ -13,49 +13,39 @@ import java.util.Map;
  * <p>
  * 代码生成器演示
  * </p>
- */
-
+**/
 public class Generator {
 
-/**
+    /**
      * <p>Description:[要生成的表]</p>
      **/
-
-
     private static String[] tables = new String[]{"t_base_vendor_method"};
 
-/**
+    /**
      * <p>Description:[在判断的时候不添加!=''的字段]</p>
      **/
-
-
     private static String[] notAppendApostropheTypes = new String[]{"Boolean", "Date"};
 
-/**
+    /**
      * <p>Description:[需要范围查询的时间字段]</p>
      **/
-
-
     private static String[] rangeDateFileds = new String[]{""};
 
-/**
+    /**
      * <p>
      * MySQL 生成演示
      * </p>
      */
-
-
     public static void main(String[] args) {
         generateCode();
     }
 
-/**
+    /**
      * <p>Description: [代码生成] </p>
      * Created on: 2018年07月17日15:29:19
      *
      * @author yinguijin
      */
-
     private static void generateCode() {
         CamelotAutoGenerator mpg = new CamelotAutoGenerator();
 

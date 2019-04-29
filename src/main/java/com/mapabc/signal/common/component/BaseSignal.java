@@ -1,5 +1,6 @@
 package com.mapabc.signal.common.component;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -12,8 +13,10 @@ import lombok.Data;
 public class BaseSignal {
 
     //信号机编号
+    @ApiModelProperty(value = "信号机编号")
     private String signalId;
 
     //信号机类型
+    @ApiModelProperty(value = "信号机类型 QS/SCATS/HS/HK")
     private String signalType;
 }

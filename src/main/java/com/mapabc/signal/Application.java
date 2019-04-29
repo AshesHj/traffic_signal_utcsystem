@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 /**
  * @author yinguijin
  * @version 1.0
- * @Description: [描述该类概要功能介绍]
+ * @Description: [SpringBoot启动类]
  * Created on 2019/4/16 11:24
  */
 @SpringBootApplication
