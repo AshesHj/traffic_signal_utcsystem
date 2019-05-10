@@ -7,7 +7,6 @@ import ${pkg};
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * @Description: [${table.comment}实体类]</p>
@@ -24,7 +23,7 @@ public class ${entity} extends ${superEntityClass}<#if activeRecord ><${entity}>
 <#elseif activeRecord>
 public class ${entity} extends Model<${entity}> {
 <#else>
-public class ${entity} implements Serializable {
+public class ${entity} {
 </#if>
 
 <#list table.fields as field>

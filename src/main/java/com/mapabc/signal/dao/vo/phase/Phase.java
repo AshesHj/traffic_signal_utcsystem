@@ -29,6 +29,9 @@ public class Phase {
     //相位顺序号
     @ApiModelProperty(value = "相位顺序号")
     private Integer phaseOrderId;
+    //原版本相位时长（绿信比）
+    @ApiModelProperty(value = "原版本相位时长（绿信比）")
+    private Integer originalTime;
     //相位时长（绿信比）
     @ApiModelProperty(value = "相位时长（绿信比）")
     private Integer phaseTime;

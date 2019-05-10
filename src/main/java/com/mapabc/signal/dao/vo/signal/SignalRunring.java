@@ -17,9 +17,9 @@ public class SignalRunring {
     //相位时长
     private Integer phaseLen;
     //相位剩余时长
-    private String phaseLeft;
+    private Integer phaseLeft;
     //当前步号
-    private String stepNo;
+    private Integer stepNo;
     //当前步长
     private Integer stepLen;
     //当前步剩余时间

@@ -30,6 +30,6 @@
 
         <!-- 控制生成文件和XML的内容 -->
         <table tableName="outsource_user" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"/>
+               enableSelectByExample="false" selectByExampleQueryId="false" />
     </context>
 </generatorConfiguration>

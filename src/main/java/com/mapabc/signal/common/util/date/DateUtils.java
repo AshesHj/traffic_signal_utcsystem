@@ -845,7 +845,7 @@ public class DateUtils {
 	 * Description:[获取两个时间的时间差]
 	 * @param date1 时间一
 	 * @param date2 时间二
-	 * @param type 获取的类型  天 时 分
+	 * @param type 获取的类型  天 时 分 秒
 	 * @return 时间一 减 时间二 的值
 	 *
 	 * Created on 2019/4/17
@@ -856,18 +856,25 @@ public class DateUtils {
 		long nd = 1000 * 24 * 60 * 60;
 		long nh = 1000 * 60 * 60;
 		long nm = 1000 * 60;
+		long ns = 1000;
 		// 计算差多少天
 		long day = diff / nd;
 		// 计算差多少小时
 		long hour = diff / nh;
 		// 计算差多少分钟
 		long min = diff / nm;
+		// 计算差多少秒
+		long sec = diff / ns;
 		if (Calendar.DATE == type) {
 			return (int) day;
 		} else if (Calendar.HOUR_OF_DAY == type) {
 			return (int) hour;
-		} else {
+		} else if (Calendar.MINUTE == type) {
 			return (int) min;
+		} else if (Calendar.SECOND == type) {
+			return (int) sec;
+		} else {
+			return (int) diff;
 		}
 	}
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TelesemeLightsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TelesemeLights">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="dirobjtype" property="dirobjtype"/>
+        <result column="drection" property="drection"/>
+        <result column="turn" property="turn"/>
+        <result column="inouttype" property="inouttype"/>
+        <result column="descreption" property="descreption"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        id,
+        code,
+        dirobjtype,
+        drection,
+        turn,
+        inouttype,
+        descreption
+    </sql>
+
+</mapper>

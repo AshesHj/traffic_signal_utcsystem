@@ -6,7 +6,6 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +16,7 @@ import java.util.Date;
  */
 @Data
 @Table(name = "t_base_vendor_method")
-public class TBaseVendorMethod implements Serializable {
+public class TBaseVendorMethod {
 
 	/**
 	 * 主键ID自增长

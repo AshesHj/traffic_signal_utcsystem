@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TBaseCrossCoilInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TBaseCrossCoilInfo">
+        <id column="id" property="id"/>
+        <result column="signal_type" property="signalType"/>
+        <result column="signal_id" property="signalId"/>
+        <result column="det_id" property="detId"/>
+        <result column="lane_id" property="laneId"/>
+        <result column="direction" property="direction"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        id,
+        signal_type,
+        signal_id,
+        det_id,
+        lane_id,
+        direction
+    </sql>
+
+</mapper>

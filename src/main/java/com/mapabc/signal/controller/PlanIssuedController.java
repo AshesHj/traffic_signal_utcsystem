@@ -6,15 +6,19 @@ import com.mapabc.signal.common.component.Result;
 import com.mapabc.signal.common.constant.Const;
 import com.mapabc.signal.common.enums.BaseEnum;
 import com.mapabc.signal.common.exception.WarnException;
+import com.mapabc.signal.dao.model.TelesemeList;
 import com.mapabc.signal.dao.vo.phase.PhasePlanVo;
 import com.mapabc.signal.dao.vo.runplan.RunplanVo;
 import com.mapabc.signal.dao.vo.sectionplan.SectionPlanVo;
 import com.mapabc.signal.dao.vo.timeplan.TimePlanVo;
-import com.mapabc.signal.service.PlanIssuedService;
+import com.mapabc.signal.service.TelesemeListService;
+import com.mapabc.signal.service.qs.QsPutPlanSignalService;
+import com.mapabc.signal.service.source.PlanIssuedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +38,22 @@ import java.util.Date;
 @RequestMapping("/")
 public class PlanIssuedController extends BaseController {
 
+    //适配器开关
+    @Value("${signalamp.vendor.qs.switch}")
+    private Boolean adSwitch;
+
+    //标准下发service
     @Resource
     private PlanIssuedService planIssuedService;
+
+    //信号机service
+    @Resource
+    private TelesemeListService telesemeListService;
+
+    //青松下发service
+    @Resource
+    private QsPutPlanSignalService qsPutPlanSignalService;
+
 
     @AspectLog(description = "下发相位方案信息到路口信号机或信号系统中", operationType = BaseEnum.OperationTypeEnum.UPDATE)
     @PostMapping("/{signalId}/phaseplans")
@@ -47,14 +65,27 @@ public class PlanIssuedController extends BaseController {
                                            @PathVariable String signalId,
                                            @RequestParam String sourceType, @RequestBody PhasePlanVo phasePlanVo) {
         try {
-            //设置参数
-            ParamEntity<PhasePlanVo> param = new ParamEntity<>();
-            param.setSourceType(sourceType);
-            param.setUpdateTime(new Date());
-            param.setSystemType(Const.SYSTEM_TYPE);
-            phasePlanVo.setSignalId(signalId);
-            param.setDataContent(phasePlanVo);
-            Result result = planIssuedService.updatePhasePlans(param);
+            //查询信号机信息
+            TelesemeList entity = telesemeListService.selectByPrimaryKey(signalId);
+            if (null == entity) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("参数错误，信号机ID不正确。");
+            }
+            Result result;
+            //开启适配服务
+            if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick()) && adSwitch) {
+                //调用青松接口实时优化 TODO
+                result = new Result();
+            } else {
+                //设置参数
+                ParamEntity<PhasePlanVo> param = new ParamEntity<>();
+                param.setSourceType(sourceType);
+                param.setUpdateTime(new Date());
+                param.setSystemType(Const.SYSTEM_TYPE);
+                phasePlanVo.setSignalId(entity.getSignalId());
+                phasePlanVo.setSignalType(entity.getSignalType());
+                param.setDataContent(phasePlanVo);
+                result = planIssuedService.updatePhasePlans(param);
+            }
             if (result.isSuccess()) {
                 return ResponseEntity.ok("success");
             }
@@ -77,15 +108,28 @@ public class PlanIssuedController extends BaseController {
                                            @PathVariable String signalId,
                                            @RequestParam String sourceType, @RequestBody TimePlanVo timePlanVo) {
         try {
-            //设置参数
-            ParamEntity<TimePlanVo> param = new ParamEntity<>();
-            param.setSourceType(sourceType);
-            param.setUpdateTime(new Date());
-            param.setSystemType(Const.SYSTEM_TYPE);
-            timePlanVo.setSignalId(signalId);
-            param.setDataContent(timePlanVo);
-            //发送请求
-            Result result = planIssuedService.updateTimePlans(param);
+            //查询信号机信息
+            TelesemeList entity = telesemeListService.selectByPrimaryKey(signalId);
+            if (null == entity) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("参数错误，信号机ID不正确。");
+            }
+            Result result;
+            //开启适配服务
+            if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick()) && adSwitch) {
+                //调用青松接口实时优化 TODO
+                result = new Result();
+            } else {
+                //设置参数
+                ParamEntity<TimePlanVo> param = new ParamEntity<>();
+                param.setSourceType(sourceType);
+                param.setUpdateTime(new Date());
+                param.setSystemType(Const.SYSTEM_TYPE);
+                timePlanVo.setSignalId(entity.getSignalId());
+                timePlanVo.setSignalType(entity.getSignalType());
+                param.setDataContent(timePlanVo);
+                //发送请求
+                result = planIssuedService.updateTimePlans(param);
+            }
             if (result.isSuccess()) {
                 return ResponseEntity.ok("success");
             }
@@ -101,7 +145,7 @@ public class PlanIssuedController extends BaseController {
 
     @AspectLog(description = "下发时段方案信息到路口信号机或信号系统中", operationType = BaseEnum.OperationTypeEnum.UPDATE)
     @PostMapping("/{signalId}/sectionplans")
-    @ApiOperation(value = "配时方案下发", notes = "下发时段方案信息到路口信号机或信号系统中")
+    @ApiOperation(value = "时段方案下发", notes = "下发时段方案信息到路口信号机或信号系统中")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "sourceType", value = "厂家简称 QS/SCATS/HS/HK", paramType = "query", required = true, dataType = "String", defaultValue = "QS")
     })
@@ -109,15 +153,28 @@ public class PlanIssuedController extends BaseController {
                                           @PathVariable String signalId,
                                           @RequestParam String sourceType, @RequestBody SectionPlanVo sectionPlanVo) {
         try {
-            //设置参数
-            ParamEntity<SectionPlanVo> param = new ParamEntity<>();
-            param.setSourceType(sourceType);
-            param.setUpdateTime(new Date());
-            param.setSystemType(Const.SYSTEM_TYPE);
-            sectionPlanVo.setSignalId(signalId);
-            param.setDataContent(sectionPlanVo);
-            //发送请求
-            Result result = planIssuedService.updateSectionPlans(param);
+            //查询信号机信息
+            TelesemeList entity = telesemeListService.selectByPrimaryKey(signalId);
+            if (null == entity) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("参数错误，信号机ID不正确。");
+            }
+            Result result;
+            //开启适配服务
+            if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick()) && adSwitch) {
+                //调用青松接口实时优化 TODO
+                result = new Result();
+            } else {
+                //设置参数
+                ParamEntity<SectionPlanVo> param = new ParamEntity<>();
+                param.setSourceType(sourceType);
+                param.setUpdateTime(new Date());
+                param.setSystemType(Const.SYSTEM_TYPE);
+                sectionPlanVo.setSignalId(entity.getSignalId());
+                sectionPlanVo.setSignalType(entity.getSignalType());
+                param.setDataContent(sectionPlanVo);
+                //发送请求
+                result = planIssuedService.updateSectionPlans(param);
+            }
             if (result.isSuccess()) {
                 return ResponseEntity.ok("success");
             }
@@ -141,15 +198,28 @@ public class PlanIssuedController extends BaseController {
                                              @PathVariable String signalId,
                                              @RequestParam String sourceType, @RequestBody RunplanVo runplanVo) {
         try {
-            //设置参数
-            ParamEntity<RunplanVo> param = new ParamEntity<>();
-            param.setSourceType(sourceType);
-            param.setUpdateTime(new Date());
-            param.setSystemType(Const.SYSTEM_TYPE);
-            runplanVo.setSignalId(signalId);
-            param.setDataContent(runplanVo);
-            //发送请求
-            Result result = planIssuedService.updateRunPlan(param);
+            //查询信号机信息
+            TelesemeList entity = telesemeListService.selectByPrimaryKey(signalId);
+            if (null == entity) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("参数错误，信号机ID不正确。");
+            }
+            Result result;
+            //开启适配服务
+            if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick()) && adSwitch) {
+                //调用青松接口实时优化 TODO
+                result = new Result();
+            } else {
+                //设置参数
+                ParamEntity<RunplanVo> param = new ParamEntity<>();
+                param.setSourceType(sourceType);
+                param.setUpdateTime(new Date());
+                param.setSystemType(Const.SYSTEM_TYPE);
+                runplanVo.setSignalId(entity.getSignalId());
+                runplanVo.setSignalType(entity.getSignalType());
+                param.setDataContent(runplanVo);
+                //发送请求
+                result = planIssuedService.updateRunPlan(param);
+            }
             if (result.isSuccess()) {
                 return ResponseEntity.ok("success");
             }

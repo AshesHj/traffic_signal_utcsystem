@@ -12,7 +12,11 @@ import java.util.concurrent.*;
  */
 public interface Const {
 
+    /**
+     * UTC 城市交通信号控制系统简称
+     */
     String SYSTEM_TYPE = "UTC";
+
     /**
      * 未删除
      */
@@ -50,6 +54,11 @@ public interface Const {
      * 分隔符：下划线
      **/
     String SEPARATOR_UNDER_LINE = "_";
+
+    /**
+     * 下划线，作为查询条件时，将"_"转化为"\_"
+     */
+    String TRANS_UNDERLINE = "\\\\_";
 
     /**
      * 分隔符：空格

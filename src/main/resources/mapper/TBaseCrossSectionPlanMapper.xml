@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TBaseCrossSectionPlanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TBaseCrossSectionPlan">
+        <id column="id" property="id"/>
+        <result column="crossid" property="crossid"/>
+        <result column="signaltype" property="signaltype"/>
+        <result column="signalid" property="signalid"/>
+        <result column="sectionplanid" property="sectionplanid"/>
+        <result column="sectionplandesc" property="sectionplandesc"/>
+        <result column="timesliceid" property="timesliceid"/>
+        <result column="timeslicedesc" property="timeslicedesc"/>
+        <result column="timesliceorderid" property="timesliceorderid"/>
+        <result column="starttime" property="starttime"/>
+        <result column="endtime" property="endtime"/>
+        <result column="timeplanid" property="timeplanid"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        id,
+        crossid,
+        signaltype,
+        signalid,
+        sectionplanid,
+        sectionplandesc,
+        timesliceid,
+        timeslicedesc,
+        timesliceorderid,
+        starttime,
+        endtime,
+        timeplanid,
+        gmt_create,
+        gmt_modified
+    </sql>
+
+</mapper>

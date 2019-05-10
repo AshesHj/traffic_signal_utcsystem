@@ -2,21 +2,25 @@ package com.mapabc.signal.service.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.mapabc.signal.common.annotation.AspectLog;
+import com.mapabc.signal.common.component.OperateLog;
 import com.mapabc.signal.common.util.IpAddressUtil;
 import com.mapabc.signal.common.util.date.DateStyle;
 import com.mapabc.signal.common.util.date.DateUtils;
-import com.mapabc.signal.common.component.OperateLog;
+import com.mapabc.signal.service.TBaseOperateLogService;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -40,6 +44,9 @@ public class SystemLogAspect {
 
     @Value("${service.name: }")
     private String serverName;
+
+    @Resource
+    private TBaseOperateLogService tBaseOperateLogService;
 
     //Controller层切点
     @Pointcut("@annotation(com.mapabc.signal.common.annotation.AspectLog)")
@@ -75,6 +82,42 @@ public class SystemLogAspect {
         } catch (Exception e) {
             //记录本地异常日志
             LOGGER.error("记录本地异常日志，异常信息:{}", e);
+        }
+    }
+
+    /**
+     * @description: 后置通知 用于拦截Controller层响应结果
+     * @param joinPoint 请求参数
+     * @param result 接口响应结果
+     * @author yinguijin
+     * @date 2019/5/10 15:37
+    */
+    @AfterReturning(value = "controllerAspect()", returning = "result")
+    public void afterReturning(JoinPoint joinPoint, ResponseEntity result) {
+        HttpServletRequest request = ((ServletRequestAttributes)
+                RequestContextHolder.getRequestAttributes()).getRequest();
+        try {
+            //请求的IP
+            String ip = IpAddressUtil.getIpAddress(request);
+            //url
+            String uri = request.getRequestURL().toString();
+            //获取信息
+            Map<String, Object> map = getControllerMethodDescription(joinPoint);
+            //*========操作日志=========*//
+            OperateLog log = new OperateLog();
+            log.setDescription(map.get("description").toString());
+            log.setIp(ip);
+            log.setOperationType(map.get("operationType").toString());
+            log.setUrl(request.getRequestURL().toString());
+            log.setArgs(getArgs(request, joinPoint));
+            log.setStatus(result.getStatusCodeValue()+"");
+            log.setResult(JSON.toJSONString(result));
+            log.setCreateTime(new Date());
+            tBaseOperateLogService.insert(log);
+            LOGGER.info("\n 外部系统调用本地接口，请求IP = {} || 接口 = {} || 地址 = {} || 响应状态 = {}", ip, map.get("description").toString(), uri, result.getStatusCodeValue());
+        } catch (Exception e) {
+            //记录本地异常日志
+            LOGGER.error("记录本地接口响应日志异常，异常信息:{}", e);
         }
     }
 

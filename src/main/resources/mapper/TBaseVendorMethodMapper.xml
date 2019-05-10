@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TBaseVendorMethod">
-        <id column="ID" property="ID"/>
+        <id column="ID" property="id"/>
         <result column="VENDOR_CODE" property="vendorCode"/>
         <result column="VENDOR_NAME" property="vendorName"/>
         <result column="VENDOR_NICK" property="vendorNick"/>

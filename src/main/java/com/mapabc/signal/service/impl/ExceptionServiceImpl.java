@@ -1,18 +1,19 @@
 package com.mapabc.signal.service.impl;
 
-import com.mapabc.signal.common.enums.BaseEnum;
+import com.mapabc.signal.common.component.ExceptionLog;
 import com.mapabc.signal.common.exception.WarnException;
 import com.mapabc.signal.common.util.IpAddressUtil;
 import com.mapabc.signal.common.util.StringUtils;
 import com.mapabc.signal.common.util.date.DateStyle;
 import com.mapabc.signal.common.util.date.DateUtils;
-import com.mapabc.signal.common.component.ExceptionLog;
 import com.mapabc.signal.service.ExceptionService;
+import com.mapabc.signal.service.TBaseExceptionLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -38,6 +39,9 @@ public class ExceptionServiceImpl implements ExceptionService {
     private String profile;
 
     private String HTTP_CONTENT_DEFAULT_CHARSET = "UTF-8";
+
+    @Resource
+    private TBaseExceptionLogService tBaseExceptionLogService;
 
     private String errorTemplate = "系统：%s\r\n" +
                 "环境：%s\r\n" +
@@ -92,15 +96,17 @@ public class ExceptionServiceImpl implements ExceptionService {
             }
             ps.close();
             outputStream.close();
+            //存储日志
+            tBaseExceptionLogService.insert(exceptionLog);
             //输出到日志文件
             this.consoleLog(exceptionLog);
         } catch (Exception e1) {
-            LOGGER.error("记录输出异常日志失败", e1.getMessage());
+            LOGGER.error("记录输出异常日志失败", e1);
         }
     }
 
     /**
-     * @description: 异常处理
+     * @description: 异常处理detail
      * @param exceptionMsg 异常描述
      * @param e 异常对象
      * @author yinguijin

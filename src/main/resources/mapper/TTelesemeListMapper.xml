@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TelesemeListMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TelesemeList">
+        <id column="ID" property="id"/>
+        <result column="CROSSID" property="crossId"/>
+        <result column="CROSSNAME" property="crossName"/>
+        <result column="LNG" property="lng"/>
+        <result column="LAT" property="lat"/>
+        <result column="SIGNAL_NAME" property="signalName"/>
+        <result column="CROSS_TYPE" property="crossType"/>
+        <result column="SIGNAL_STATUS" property="signalStatus"/>
+        <result column="IP" property="ip"/>
+        <result column="AREA_NAME" property="areaName"/>
+        <result column="ADDR" property="addr"/>
+        <result column="REMARK" property="remark"/>
+        <result column="SIGNAL_TYPE" property="signalType"/>
+        <result column="SIGNAL_ID" property="signalId"/>
+    </resultMap>
+
+    <resultMap id="BaseSignalResultMap" type="com.mapabc.signal.common.component.BaseSignal">
+        <result column="SIGNAL_TYPE" property="signalType"/>
+        <result column="SIGNAL_ID" property="signalId"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        ID,
+        CROSSID,
+        CROSSNAME,
+        LNG,
+        LAT,
+        SIGNAL_NAME,
+        CROSS_TYPE,
+        SIGNAL_STATUS,
+        IP,
+        AREA_NAME,
+        ADDR,
+        REMARK,
+        SIGNAL_TYPE,
+        SIGNAL_ID
+    </sql>
+
+    <select id="selectByTeleseme" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List" />
+        from
+        t_teleseme_list
+        where 1=1
+        <if test="entity != null">
+            <if test="entity.signalType != null and entity.signalType != ''">
+                and SIGNAL_TYPE = #{entity.signalType}
+            </if>
+            <if test="entity.signalId != null and entity.signalId != ''">
+                and SIGNAL_ID = #{entity.signalId}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectByBaseSignal" resultMap="BaseSignalResultMap">
+        select
+            SIGNAL_TYPE,
+            SIGNAL_ID
+        from
+        t_teleseme_list
+        where 1=1
+        <if test="entity != null">
+            <if test="entity.signalType != null and entity.signalType != ''">
+                and SIGNAL_TYPE = #{entity.signalType}
+            </if>
+            <if test="entity.signalId != null and entity.signalId != ''">
+                and SIGNAL_ID = #{entity.signalId}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+            <include refid="Base_Column_List" />
+        from
+            t_teleseme_list
+        where 1=1
+        <if test="ids != null">
+            and
+            <foreach collection="ids" item="item" open="(" separator="or" close=")">
+                id = #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <update id="batchUpdateStatus" parameterType="java.util.List">
+        <foreach collection="list" item="entity" index="index" open="" close="" separator=";">
+            UPDATE t_teleseme_list
+            <set>
+                SIGNAL_STATUS = #{entity.commStatus}
+            </set>
+            <where>
+                SIGNAL_ID = #{entity.signalId}
+                and
+                SIGNAL_TYPE = #{entity.signalType}
+            </where>
+        </foreach>
+    </update>
+</mapper>

@@ -3,7 +3,6 @@ package com.mapabc.signal.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.mapabc.signal.ApplicationTests;
 import com.mapabc.signal.common.constant.Const;
-import com.mapabc.signal.common.enums.BaseEnum;
 import com.mapabc.signal.dao.model.TBaseVendorMethod;
 import com.mapabc.signal.service.TBaseVendorMethodService;
 import org.junit.Test;
@@ -11,8 +10,6 @@ import org.junit.Test;
 import javax.annotation.Resource;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author yinguijin

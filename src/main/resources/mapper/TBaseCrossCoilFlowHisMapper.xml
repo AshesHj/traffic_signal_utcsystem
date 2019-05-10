@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TBaseCrossCoilFlowHisMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.dao.model.TBaseCrossCoilFlowHis">
+        <id column="id" property="id"/>
+        <result column="signal_type" property="signalType"/>
+        <result column="signal_id" property="signalId"/>
+        <result column="date_time" property="dateTime"/>
+        <result column="granula" property="granula"/>
+        <result column="det_id" property="detId"/>
+        <result column="volume" property="volume"/>
+        <result column="speed" property="speed"/>
+        <result column="occupancy" property="occupancy"/>
+        <result column="head_distance" property="headDistance"/>
+        <result column="head_time" property="headTime"/>
+        <result column="car_length" property="carLength"/>
+        <result column="queue_length" property="queueLength"/>
+        <result column="credible" property="credible"/>
+        <result column="saturation" property="saturation"/>
+        <result column="mini_volume" property="miniVolume"/>
+        <result column="small_volume" property="smallVolume"/>
+        <result column="middle_volume" property="middleVolume"/>
+        <result column="big_volume" property="bigVolume"/>
+        <result column="large_volume" property="largeVolume"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        id,
+        signal_type,
+        signal_id,
+        date_time,
+        granula,
+        det_id,
+        volume,
+        speed,
+        occupancy,
+        head_distance,
+        head_time,
+        car_length,
+        queue_length,
+        credible,
+        saturation,
+        mini_volume,
+        small_volume,
+        middle_volume,
+        big_volume,
+        large_volume,
+        create_time
+    </sql>
+
+</mapper>

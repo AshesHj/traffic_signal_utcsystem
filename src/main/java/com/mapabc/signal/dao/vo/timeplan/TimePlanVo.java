@@ -34,7 +34,7 @@ public class TimePlanVo extends BaseSignal {
     private String coordPhaseId;
     //相位差
     @ApiModelProperty(value = "相位差")
-    private String offset;
+    private Integer offset;
     //环数量 1 一环 2 两环
     @ApiModelProperty(value = "环数量 1 一环 2 两环")
     private String ringCount;

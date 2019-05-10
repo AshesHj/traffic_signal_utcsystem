@@ -21,12 +21,19 @@ public class BaseEnum {
     }
 
     /**
-     * @description: [信号灯控制模式]
+     * @description: [状态]
      * @author yinguijin
      * @date 2019/4/19 18:01
      */
-    public enum SignalControlModeEnum {
+    @Getter
+    @AllArgsConstructor
+    public enum StatusEnum {
+        ON(1, "在线/有效"),
+        OFF(2, "下线/无效");
 
+        private Integer code;
+
+        private String name;
     }
 
     /**

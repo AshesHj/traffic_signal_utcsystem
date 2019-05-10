@@ -14,7 +14,7 @@ public enum DateStyle {
 	YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss", false),
 	YYYYMMDDHHMMSS("yyyyMMddHHmmss", false),
 	YYYYMMDDHHMMSSSSS("yyyyMMddHHmmssSSS", false),
-	YYMMDD("yyMMdd", false),
+	YYYYMMDD("yyyyMMdd", false),
 
 	YYYY_MM_EN("yyyy/MM", false),
 	YYYY_MM_DD_EN("yyyy/MM/dd", false),

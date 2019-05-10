@@ -13,7 +13,7 @@ public class Step {
     //步号：1,2,3,4,5,6
     private Integer stepNo;
     //步类型：1 green 2 greenflash 3 pedflash 4 yellow 5 red 6 off
-    private String stepType;
+    private Integer stepType;
     //步长
     private Integer stepLen;
 

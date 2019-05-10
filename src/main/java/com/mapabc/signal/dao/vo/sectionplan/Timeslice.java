@@ -24,7 +24,7 @@ public class Timeslice {
 
     //时段顺序号
     @ApiModelProperty(value = "时段顺序号")
-    private String timesliceorderid;
+    private Integer timesliceorderid;
 
     //开始时间，格式 HH:MI:00
     @ApiModelProperty(value = "开始时间，格式 HH:MI:00")

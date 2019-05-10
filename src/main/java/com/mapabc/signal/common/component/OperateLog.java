@@ -2,6 +2,8 @@ package com.mapabc.signal.common.component;
 
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -10,6 +12,7 @@ import java.util.Date;
  * @date 2019/4/17 12:45
  */
 @Data
+@Table(name = "t_base_operate_log")
 public class OperateLog {
 
     /**
@@ -25,12 +28,18 @@ public class OperateLog {
     /**
      * 操作类型(增删改查)
      */
+    @Column(name = "operation_type")
     private String operationType;
 
     /**
      * 响应状态码:如200、500等
      */
     private String status;
+
+    /**
+     * 响应结果
+     */
+    private String result;
 
     /**
      * 请求参数
@@ -40,6 +49,7 @@ public class OperateLog {
     /**
      * 操作时间
      */
+    @Column(name = "create_time")
     private Date createTime;
 
     /**

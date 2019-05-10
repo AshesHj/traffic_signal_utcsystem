@@ -2,6 +2,8 @@ package com.mapabc.signal.dao.vo.detector;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * @author yinguijin
  * @version 1.0
@@ -20,17 +22,17 @@ public class Detector {
     //单位时间粒度内的流量，小车当量
     private Integer volume;
     //平均速度
-    private Double speed;
+    private BigDecimal speed;
     //时间占有率
-    private Double occupancy;
+    private BigDecimal occupancy;
     //车头间距
-    private Double headDistance;
+    private BigDecimal headDistance;
     //车头时距
-    private Double headTime;
+    private BigDecimal headTime;
     //平均车长
-    private Double length;
+    private BigDecimal length;
     //饱和度
-    private Double saturation;
+    private BigDecimal saturation;
     //微型车流量
     private Integer miniVolume;
     //小车流量

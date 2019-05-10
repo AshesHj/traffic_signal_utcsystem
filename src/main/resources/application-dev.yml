@@ -14,7 +14,7 @@ threadPool:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://44.104.93.92:3306/its_db_190422?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'&useSSL=false&useCursorFetch=true
+    url: jdbc:mysql://44.104.93.92:3306/its_db_190506?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'&useSSL=false&useCursorFetch=true
     username: root
     password: mapabc
     type: com.alibaba.druid.pool.DruidDataSource
@@ -51,9 +51,9 @@ spring:
       charset: UTF-8
       enabled: true
   redis:
-    host: 127.0.0.1
+    host: 44.104.93.87
     port: 6379
-    password:
+    password: mapabc@2017
     pool:
       maxActive: 100
       maxWait: -1
@@ -66,9 +66,16 @@ signalamp:
   # 供应商-厂家接口
   vendor:
     qs:
+      # QS接口适配服务是否开启
+      switch: true
       rootpath: http://192.168.205.210/scss.api
       username: mapabc
       password: mapabc2017
       login: /api/user/login
       getSignalList: /api/controllers
+  # 基础信息
+  basic:
+    # 平均车长
+    carLength: 7.0
+
 

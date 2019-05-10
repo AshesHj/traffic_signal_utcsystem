@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapabc.signal.dao.mapper.TBaseOperateLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mapabc.signal.common.component.OperateLog">
+        <id column="id" property="id"/>
+        <result column="url" property="url"/>
+        <result column="ip" property="ip"/>
+        <result column="operation_type" property="operationType"/>
+        <result column="args" property="args"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="result" property="result"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!--基本字段列表-->
+    <sql id="Base_Column_List">
+        id,
+        url,
+        ip,
+        operation_type,
+        args,
+        description,
+        status,
+        result,
+        create_time
+    </sql>
+
+</mapper>

@@ -50,12 +50,8 @@ public class HttpRestEntity {
         }
         url = method.getMethodUrl();
         httpMethod = HttpMethod.valueOf(method.getHttpMethod());
-        // TODO 不同的厂商可以定义不同的请求头
-        if (sourceType.equals(BaseEnum.VendorTypeEnum.QS.getNick())) {
-            headers = handlerHeader();
-        } else {
-            headers = handlerHeader();
-        }
+        headers = handlerHeader();
+
     }
 
     /**
@@ -66,7 +62,7 @@ public class HttpRestEntity {
     private Map<String, String> handlerHeader() {
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type","application/json; charset=UTF-8");
-        header.put("Accept", MediaType.APPLICATION_JSON.toString()) ;
+        header.put("Accept", MediaType.APPLICATION_JSON.toString());
         return header;
     }
 }

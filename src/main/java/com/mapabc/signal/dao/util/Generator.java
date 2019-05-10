@@ -19,7 +19,7 @@ public class Generator {
     /**
      * <p>Description:[要生成的表]</p>
      **/
-    private static String[] tables = new String[]{"t_base_vendor_method"};
+    private static String[] tables = new String[]{"t_base_exception_log", "t_base_operate_log"};
 
     /**
      * <p>Description:[在判断的时候不添加!=''的字段]</p>
@@ -51,7 +51,7 @@ public class Generator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("D:/template");
+        gc.setOutputDir("E:/template");
         gc.setFileOverride(true);
         gc.setActiveRecord(false);
         gc.setEnableCache(false);// XML 二级缓存
@@ -76,7 +76,9 @@ public class Generator {
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("mapabc");
-        dsc.setUrl("jdbc:mysql://44.104.93.92:3306/its_db_190422");
+//        dsc.setPassword("123456");
+        dsc.setUrl("jdbc:mysql://44.104.93.92:3306/its_db_190506");
+//        dsc.setUrl("jdbc:mysql://192.168.2.133:3306/its_db");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -85,7 +87,7 @@ public class Generator {
         strategy.setInclude(tables);
         strategy.setFieldNaming(NamingStrategy.underline_to_camel);
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        //strategy.setDbColumnUnderline(true);
+//        strategy.setDbColumnUnderline(true);
         mpg.setStrategy(strategy);
         strategy.setSuperControllerClass("com.mapabc.signal.controller.BaseController");
         strategy.setSuperMapperClass("com.mapabc.signal.dao.MyBaseMapper");
@@ -97,7 +99,7 @@ public class Generator {
         pc.setParent("com.mapabc.signal");
         pc.setMapper("dao.mapper");
         pc.setController("controller");
-        pc.setEntity("dao.vo");
+        pc.setEntity("dao.model");
         //pc.setSubModuleName("product");
         mpg.setPackageInfo(pc);
 
