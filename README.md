@@ -4,7 +4,7 @@
  2.	适应NEMA标准的基于信号灯组环控制方式
  3.	适应国内传统的基于信号状态控制方式
  
- ###项目访问地址
+ ### 项目访问地址
   http://localhost:8080/utcsystem/swagger-ui.html
   
   基础表t_base_vendor_method 维护厂商外部接口url
