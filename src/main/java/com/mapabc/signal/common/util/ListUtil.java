@@ -12,9 +12,10 @@ import java.text.Collator;
 import java.util.*;
 
 /**
- * 
- * 排序工具
+ * @description: 集合处理工具类
  * @author yinguijin
+ * @version 1.0
+ * Created on 2019/5/11 9:34
  */
 public class ListUtil {
 

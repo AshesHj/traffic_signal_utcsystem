@@ -1,6 +1,5 @@
 package com.mapabc.signal.controller;
 
-import com.mapabc.signal.common.annotation.AspectLog;
 import com.mapabc.signal.common.component.BaseSignal;
 import com.mapabc.signal.common.component.ParamEntity;
 import com.mapabc.signal.common.component.VendorResult;
@@ -56,7 +55,7 @@ public class SignalRunController extends BaseController {
     @Resource
     private TelesemeListService telesemeListService;
 
-    @AspectLog(description = "获取路口信号机的实时运行状态数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
+    //@AspectLog(description = "获取路口信号机的实时运行状态数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
     @GetMapping("/runstate")
     @ApiOperation(value = "信号机运行状态数据", notes = "获取路口信号机的实时运行状态数据")
     public ResponseEntity queryRunState (HttpServletRequest request, @RequestParam(value = "ids", required = false) @ApiParam(value = "信号机表ID集合") List<String> ids) {
@@ -72,7 +71,7 @@ public class SignalRunController extends BaseController {
     }
 
 
-    @AspectLog(description = "获取路口信号机的实时告警数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
+    //@AspectLog(description = "获取路口信号机的实时告警数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
     @GetMapping("/alarms")
     @ApiOperation(value = "信号机告警数据", notes = "获取路口信号机的实时告警数据")
     public ResponseEntity queryAlarms (HttpServletRequest request, @RequestParam(value = "ids", required = false) @ApiParam(value = "信号机表ID集合") List<String> ids) {
@@ -112,7 +111,7 @@ public class SignalRunController extends BaseController {
     }
 
 
-    @AspectLog(description = "获取路口信号机的实时灯态数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
+    //@AspectLog(description = "获取路口信号机的实时灯态数据", operationType = BaseEnum.OperationTypeEnum.QUERY)
     @GetMapping("/signal")
     @ApiOperation(value = "信号灯态数据", notes = "获取路口信号机的实时灯态数据")
     public ResponseEntity querySignalInfo (HttpServletRequest request, @RequestParam(value = "ids", required = false) @ApiParam(value = "信号机表ID集合") List<String> ids) {

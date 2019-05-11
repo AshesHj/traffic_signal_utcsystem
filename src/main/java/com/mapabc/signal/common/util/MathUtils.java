@@ -2,7 +2,12 @@ package com.mapabc.signal.common.util;
 
 import java.math.BigDecimal;
 
-
+/**
+ * @description: 数字处理工具类
+ * @author yinguijin
+ * @version 1.0
+ * Created on 2019/5/11 9:34
+ */
 public class MathUtils {
 
     /** 一百的常量 */

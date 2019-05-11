@@ -1,6 +1,10 @@
 package com.mapabc.signal.service.qs;
 
+import com.mapabc.signal.common.component.ParamEntity;
 import com.mapabc.signal.common.component.Result;
+import com.mapabc.signal.dao.vo.phase.PhasePlanVo;
+import com.mapabc.signal.dao.vo.runplan.RunplanVo;
+import com.mapabc.signal.dao.vo.sectionplan.SectionPlanVo;
 import com.mapabc.signal.dao.vo.timeplan.TimePlanVo;
 
 /**
@@ -69,4 +73,41 @@ public interface QsPutPlanSignalService {
      * @date 2019/4/28 14:34
      */
     Result updateQsForcePlan(String signalId, String timePlanId, Integer minutes);
+
+
+    /**
+     * @description: 相位方案下发-->下发相位方案信息到路口信号机或信号系统中
+     * @param param 下发的相位数据
+     * @return Result 发送结果
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    Result updateQsPhasePlans(PhasePlanVo param);
+
+    /**
+     * @description: 配时方案下发-->下发配时方案信息到路口信号机或信号系统中
+     * @param param 下发的配时数据
+     * @return Result 发送结果
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    Result updateQsTimePlans(TimePlanVo param);
+
+    /**
+     * @description: 时段方案下发-->下发时段方案信息到路口信号机或信号系统中
+     * @param param 下发的时段方案数据
+     * @return Result 发送结果
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    Result updateQsSectionPlans(SectionPlanVo param);
+
+    /**
+     * @description: 运行计划下发-->下发运行计划信息到路口信号机或信号系统中
+     * @param param 下发的运行方案数据
+     * @return Result 发送结果
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    Result updateQsRunPlan(RunplanVo param);
 }

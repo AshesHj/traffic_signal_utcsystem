@@ -1,6 +1,7 @@
 package com.mapabc.signal.service.qs.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mapabc.signal.common.component.HttpRestEntity;
 import com.mapabc.signal.common.component.Result;
@@ -11,6 +12,11 @@ import com.mapabc.signal.common.util.HttpRestUtil;
 import com.mapabc.signal.common.util.ListUtil;
 import com.mapabc.signal.common.util.RedisUtil;
 import com.mapabc.signal.dao.vo.phase.Phase;
+import com.mapabc.signal.dao.vo.phase.PhasePlanVo;
+import com.mapabc.signal.dao.vo.runplan.RunplanVo;
+import com.mapabc.signal.dao.vo.sectionplan.SectionPlan;
+import com.mapabc.signal.dao.vo.sectionplan.SectionPlanVo;
+import com.mapabc.signal.dao.vo.sectionplan.Timeslice;
 import com.mapabc.signal.dao.vo.timeplan.Ring;
 import com.mapabc.signal.dao.vo.timeplan.TimePlanVo;
 import com.mapabc.signal.service.qs.QsPutPlanSignalService;
@@ -183,6 +189,46 @@ public class QsPutPlanSignalServiceImpl implements QsPutPlanSignalService {
     }
 
     /**
+     * @description: 调用青松接口执行手动控制
+     * @param signalId 信号机编号
+     * @param runningMode `2=手动锁定当前相位`，`3=手动全红`，`4=手动黄闪`，`8=正常按计划运行`，`255=临时控制方案`
+     * @return com.mapabc.signal.common.component.Result 请求响应结果
+     * @author yinguijin
+     * @date 2019/5/10 10:36
+     */
+    private Result updateManual(String signalId, Integer runningMode) {
+        Result result = new Result();
+        try {
+            //获取URL 封装请求头
+            HttpRestEntity restEntity = new HttpRestEntity(BaseEnum.VendorTypeEnum.QS.getNick(), "updateManual");
+            String urlTemplate = restEntity.getUrl();
+            Map<String, String> headers = restEntity.getHeaders();
+            headers.put("Authorization","Bearer " + redisUtil.get(RedisKeyConst.KEY_PREFIX + RedisKeyConst.TOKEN).toString());
+            String url = MessageFormat.format(urlTemplate, signalId);
+            //封装请求参数
+            JSONObject param = new JSONObject();
+            param.put("runningMode", runningMode) ;
+            //发送请求
+            HttpRestUtil.doPost(url, headers, JSON.toJSONString(param));
+            return result.renderSuccess();
+        } catch(HttpClientErrorException e) {
+            HttpStatus statusCode = e.getStatusCode();
+            if (HttpStatus.UNAUTHORIZED.equals(statusCode)) {//401
+                //重新登录-刷新Redis中token
+                //this.login(); TODO 测试阶段注释
+                LOGGER.error("认证失败，Token失效，已经重新刷新token", e);
+                return result.renderError(HttpStatus.UNAUTHORIZED.value(), "认证失败，Token失效，已经重新刷新token");
+            } else if(HttpStatus.NOT_FOUND.equals(statusCode)) {//404
+                LOGGER.error("请求URL地址不存在！", e);
+                return result.renderError(HttpStatus.NOT_FOUND.value(), "请求URL地址不存在！");
+            }
+            throw new RuntimeException("当前路口信号机的优化方案下发失败，接口响应500。", e);
+        }  catch(Exception e) {
+            throw new RuntimeException("系统繁忙，服务器端内部错误！", e);
+        }
+    }
+
+    /**
      * @param signalId   信号机编号
      * @param timePlanId 配时方案编号
      * @param minutes    控制方案运行时长（分钟）
@@ -228,27 +274,53 @@ public class QsPutPlanSignalServiceImpl implements QsPutPlanSignalService {
 
 
     /**
-     * @description: 调用青松接口执行手动控制
-     * @param signalId 信号机编号
-     * @param runningMode `2=手动锁定当前相位`，`3=手动全红`，`4=手动黄闪`，`8=正常按计划运行`，`255=临时控制方案`
-     * @return com.mapabc.signal.common.component.Result 请求响应结果
+     * @param param 下发的相位数据
+     * @return Result 发送结果
+     * @description: 相位方案下发-->下发相位方案信息到路口信号机或信号系统中
      * @author yinguijin
-     * @date 2019/5/10 10:36
-    */
-    private Result updateManual(String signalId, Integer runningMode) {
+     * @date 2019/4/28 20:24
+     */
+    @Override
+    public Result updateQsPhasePlans(PhasePlanVo param) {
+        return null;
+    }
+
+    /**
+     * @param param 下发的配时数据
+     * @return Result 发送结果
+     * @description: 配时方案下发-->下发配时方案信息到路口信号机或信号系统中
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    @Override
+    public Result updateQsTimePlans(TimePlanVo param) {
         Result result = new Result();
         try {
             //获取URL 封装请求头
-            HttpRestEntity restEntity = new HttpRestEntity(BaseEnum.VendorTypeEnum.QS.getNick(), "updateManual");
+            HttpRestEntity restEntity = new HttpRestEntity(BaseEnum.VendorTypeEnum.QS.getNick(), "updateTimePlans");
             String urlTemplate = restEntity.getUrl();
             Map<String, String> headers = restEntity.getHeaders();
             headers.put("Authorization","Bearer " + redisUtil.get(RedisKeyConst.KEY_PREFIX + RedisKeyConst.TOKEN).toString());
-            String url = MessageFormat.format(urlTemplate, signalId);
+            //定义参数
+            JSONObject object = new JSONObject();
+            JSONArray array = new JSONArray();
             //封装请求参数
-            JSONObject param = new JSONObject();
-            param.put("runningMode", runningMode) ;
+            object.put("phasesId", param.getPhasePlanId());//相位方案编号
+            object.put("overwrite", Const.IS_DELETE_YES);//是否覆盖现有控制方案 true
+            object.put("offset", param.getOffset());//相位差（秒，可选）
+
+            List<Ring> rings = param.getRings();
+            List<Phase> phases = rings.get(0).getPhases();
+            for (Phase phase : phases) {
+                JSONObject en = new JSONObject();
+                en.put("minGreenLength", phase.getMingreenTime());//最小绿灯时间
+                en.put("maxGreenLength", phase.getMaxgreenTime());//最大绿灯时间
+                array.add(en);
+            }
+            object.put("phases", array);//相位方案
             //发送请求
-            HttpRestUtil.doPost(url, headers, JSON.toJSONString(param));
+            String url = MessageFormat.format(urlTemplate, param.getSignalId());
+            HttpRestUtil.doPost(url, headers, JSON.toJSONString(object));
             return result.renderSuccess();
         } catch(HttpClientErrorException e) {
             HttpStatus statusCode = e.getStatusCode();
@@ -266,4 +338,111 @@ public class QsPutPlanSignalServiceImpl implements QsPutPlanSignalService {
             throw new RuntimeException("系统繁忙，服务器端内部错误！", e);
         }
     }
+
+    /**
+     * @param param 下发的时段方案数据
+     * @return Result 发送结果
+     * @description: 时段方案下发-->下发时段方案信息到路口信号机或信号系统中
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    @Override
+    public Result updateQsSectionPlans(SectionPlanVo param) {
+        Result result = new Result();
+        try {
+            //获取URL 封装请求头
+            HttpRestEntity restEntity = new HttpRestEntity(BaseEnum.VendorTypeEnum.QS.getNick(), "updateTimePlans");
+            String urlTemplate = restEntity.getUrl();
+            Map<String, String> headers = restEntity.getHeaders();
+            headers.put("Authorization","Bearer " + redisUtil.get(RedisKeyConst.KEY_PREFIX + RedisKeyConst.TOKEN).toString());
+            //封装请求参数
+            /**
+             * TODO 如果是循环修改多个时段方案，返回值那块需要处理
+             * 目前同时成功 同时失败
+             */
+            List<SectionPlan> sectionPlans = param.getSectionPlans();
+            for (SectionPlan plan : sectionPlans) {
+                String url = MessageFormat.format(urlTemplate, param.getSignalId());
+                //请求参数
+                JSONObject obj = new JSONObject();
+                obj.put("periodsId", plan.getSectionPlanId());//要写入的时段方案编号
+                obj.put("overwrite", Const.IS_DELETE_YES);//如果已存在是否覆盖
+                JSONArray periods = new JSONArray();
+                for (Timeslice timeslice : plan.getTimeslices()) {
+                    JSONObject period = new JSONObject();
+                    period.put("from", timeslice.getStarttime());// 时段开始时间，00表示分，9表示时，即9:00
+                    period.put("phasesId", timeslice.getTimeplanid());//配时方案编号
+                    periods.add(period);
+                }
+                obj.put("periods", periods);//时段设置
+                //发送请求
+                HttpRestUtil.doPost(url, headers, JSON.toJSONString(obj));
+            }
+            return result.renderSuccess();
+        } catch(HttpClientErrorException e) {
+            HttpStatus statusCode = e.getStatusCode();
+            if (HttpStatus.UNAUTHORIZED.equals(statusCode)) {//401
+                //重新登录-刷新Redis中token
+                //this.login(); TODO 测试阶段注释
+                LOGGER.error("认证失败，Token失效，已经重新刷新token", e);
+                return result.renderError(HttpStatus.UNAUTHORIZED.value(), "认证失败，Token失效，已经重新刷新token");
+            } else if(HttpStatus.NOT_FOUND.equals(statusCode)) {//404
+                LOGGER.error("请求URL地址不存在！", e);
+                return result.renderError(HttpStatus.NOT_FOUND.value(), "请求URL地址不存在！");
+            }
+            throw new RuntimeException("当前路口信号机的优化方案下发失败，接口响应500。", e);
+        }  catch(Exception e) {
+            throw new RuntimeException("系统繁忙，服务器端内部错误！", e);
+        }
+    }
+
+    /**
+     * @param param 下发的运行方案数据
+     * @return Result 发送结果
+     * @description: 运行计划下发-->下发运行计划信息到路口信号机或信号系统中
+     * @author yinguijin
+     * @date 2019/4/28 20:24
+     */
+    @Override
+    public Result updateQsRunPlan(RunplanVo param) {
+        Result result = new Result();
+        try {
+            //获取URL 封装请求头
+            HttpRestEntity restEntity = new HttpRestEntity(BaseEnum.VendorTypeEnum.QS.getNick(), "updateTimePlans");
+            String urlTemplate = restEntity.getUrl();
+            Map<String, String> headers = restEntity.getHeaders();
+            headers.put("Authorization","Bearer " + redisUtil.get(RedisKeyConst.KEY_PREFIX + RedisKeyConst.TOKEN).toString());
+            //请求参数
+            JSONObject object = new JSONObject();
+            JSONArray days = new JSONArray();
+            //封装请求参数
+            JSONArray weeks = param.getWeeks();
+            for (int i = 0; i < weeks.size(); i++) {
+                JSONObject day = new JSONObject();
+                JSONObject week = weeks.getJSONObject(i);
+                day.put("weekDay", week.getInteger("weeknum"));//星期
+                day.put("periodsId", week.getString("sectionplanid"));//时段方案ID
+            }
+            object.put("days", days);
+            //发送请求
+            String url = MessageFormat.format(urlTemplate, param.getSignalId());
+            HttpRestUtil.doPost(url, headers, JSON.toJSONString(object));
+            return result.renderSuccess();
+        } catch(HttpClientErrorException e) {
+            HttpStatus statusCode = e.getStatusCode();
+            if (HttpStatus.UNAUTHORIZED.equals(statusCode)) {//401
+                //重新登录-刷新Redis中token
+                //this.login(); TODO 测试阶段注释
+                LOGGER.error("认证失败，Token失效，已经重新刷新token", e);
+                return result.renderError(HttpStatus.UNAUTHORIZED.value(), "认证失败，Token失效，已经重新刷新token");
+            } else if(HttpStatus.NOT_FOUND.equals(statusCode)) {//404
+                LOGGER.error("请求URL地址不存在！", e);
+                return result.renderError(HttpStatus.NOT_FOUND.value(), "请求URL地址不存在！");
+            }
+            throw new RuntimeException("当前路口信号机的优化方案下发失败，接口响应500。", e);
+        }  catch(Exception e) {
+            throw new RuntimeException("系统繁忙，服务器端内部错误！", e);
+        }
+    }
+
 }
